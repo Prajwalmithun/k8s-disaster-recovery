@@ -1,0 +1,16 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  creationTimestamp: null
+  name: manual-backup
+  namespace: velero
+spec:
+  csiSnapshotTimeout: 0s
+  hooks: {}
+  includedNamespaces:
+  - '*'
+  itemOperationTimeout: 0s
+  metadata: {}
+  ttl: 0s
+status: {}
+

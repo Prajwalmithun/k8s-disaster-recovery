@@ -1,0 +1,47 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: primary-eks
+  region: us-east-1
+
+vpc:
+  id: "vpc-03c8ea81ef400f947"
+  cidr: "172.31.0.0/16"
+  subnets:
+    public:
+      us-east-1a: { id: subnet-0b8b974c1de7bcf76 }
+      us-east-1b: { id: subnet-0616c94b6987504a4 }
+      us-east-1c: { id: subnet-07f78d614f0e3902b }
+
+managedNodeGroups:
+  - name: ng-workers
+    instanceType: t3.small
+    labels: { role: workers }
+    minSize: 2
+    maxSize: 4
+    ssh: 
+      allow: true
+      publicKeyName: primary-eks-pk
+    tags:
+      Name: ng-db
+  - name: ng-spot
+    instanceType: t3.medium
+    labels: { role: builders }
+    minSize: 3
+    maxSize: 6
+    spot: true
+    ssh: 
+      allow: true
+      publicKeyName: primary-eks-pk
+    tags:
+      Name: ng-spot
+
+addons:
+  - name: aws-ebs-csi-driver
+    version: latest
+  - name: eks-pod-identity-agent
+    version: latest
+
+addonsConfig:    
+   autoApplyPodIdentityAssociations: true
